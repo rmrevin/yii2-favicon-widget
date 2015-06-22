@@ -51,3 +51,15 @@ In layout view
 </body>
 </html>
 ```
+
+Hint
+----
+You may add to .gitignore to webroot
+```
+/favicon-*.png
+/android-chrome-*.png
+/apple-touch-icon*.png
+/mstile-*.png
+/browserconfig.xml
+/manifest.json
+```
