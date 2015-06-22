@@ -1,6 +1,6 @@
 <?php
 /**
- * Widget.php
+ * Favicon.php
  * @author Revin Roman
  * @link https://rmrevin.ru
  */
@@ -14,10 +14,10 @@ use yii\helpers\Html;
 use yii\imagine\Image;
 
 /**
- * Class Widget
+ * Class Favicon
  * @package rmrevin\yii\favicon
  */
-class Widget extends \yii\base\Widget
+class Favicon extends \yii\base\Widget
 {
 
     /** @var bool */
@@ -389,11 +389,11 @@ class Widget extends \yii\base\Widget
         }
 
         if ($size[0] !== $size[1]) {
-            throw new \yii\base\InvalidConfigException('Favicon file is not square.');
+            \Yii::warning('Favicon is not square.', __CLASS__);
         }
 
         if ($size[0] < 250) {
-            throw new \yii\base\InvalidConfigException('Resolution favicon file must be greater than 250x250.');
+            \Yii::warning('The recommended size for favicon is 250x250.', __CLASS__);
         }
 
         return $favicon_path;
