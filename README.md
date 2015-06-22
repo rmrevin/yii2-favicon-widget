@@ -15,12 +15,6 @@ Usage
 -----
 In layout view
 ```php
-<?php
-// ...
-
-rmrevin\yii\fontawesome\AssetBundle::register($this);
-
-?>
 <html>
 <head>
     // ...
@@ -30,7 +24,8 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
         'web' => '@webroot',
         'color' => '#2b5797',
     ]);
-    // generate 
+    
+    // output 
     // <link type="image/png" href="/favicon-16x16.png" rel="icon" sizes="16x16">
     // <link type="image/png" href="/favicon-32x32.png" rel="icon" sizes="32x32">
     // <link type="image/png" href="/favicon-96x96.png" rel="icon" sizes="96x96">
@@ -49,12 +44,10 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
     // <meta name="msapplication-TileColor" content="#2b5797">
     // <meta name="msapplication-TileImage" content="/mstile-144x144.png">
     // <meta name="theme-color" content="#2b5797">
-    
     ?>
 </head>
 <body>
     // ...
 </body>
 </html>
-
 ```
