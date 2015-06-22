@@ -54,7 +54,7 @@ In layout view
 
 Hint
 ----
-You may add to `.gitignore` to webroot
+You may add to `.gitignore` in webroot
 ```
 /favicon-*.png
 /android-chrome-*.png
