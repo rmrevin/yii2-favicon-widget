@@ -1,0 +1,40 @@
+{
+  "name": "rmrevin/yii2-favicon-widget",
+  "description": "Asset Bundle for Yii2 with Font Awesome",
+  "keywords": [
+    "yii",
+    "favicon",
+    "widget"
+  ],
+  "type": "yii2-extension",
+  "license": "MIT",
+  "minimum-stability": "stable",
+  "support": {
+    "issues": "https://github.com/rmrevin/yii2-favicon-widget/issues",
+    "source": "https://github.com/rmrevin/yii2-favicon-widget"
+  },
+  "authors": [
+    {
+      "name": "Roman Revin",
+      "email": "xgismox@gmail.com",
+      "homepage": "http://rmrevin.ru/"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0",
+
+    "yiisoft/yii2": "2.0.*",
+    "yiisoft/yii2-imagine": "2.0.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "rmrevin\\yii\\favicon\\": ""
+    }
+  },
+  "extra": {
+    "asset-installer-paths": {
+      "npm-asset-library": "vendor/npm",
+      "bower-asset-library": "vendor/bower"
+    }
+  }
+}
