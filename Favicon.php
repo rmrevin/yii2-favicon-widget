@@ -38,8 +38,8 @@ class Favicon extends \yii\base\Widget
     /** @var string color for ms windows tile background & android theme color */
     public $color = '#2b5797';
 
-    /** @var string|Color color for apple icons background fill (null - transparent) */
-    public $fillColor = '#a4eeff';
+    /** @var string|null|Color color for apple icons background fill (null - transparent) */
+    public $fillColor;
 
     /** @var array */
     protected $tags = [];
@@ -208,9 +208,9 @@ class Favicon extends \yii\base\Widget
 
         $Color = empty($this->fillColor)
             ? new Color('ffffff', 100)
-            : is_string($this->fillColor)
+            : (is_string($this->fillColor)
                 ? new Color(str_replace('#', '', $this->fillColor))
-                : $this->color;
+                : $this->color);
 
         foreach ([57, 60, 72, 76, 114, 120, 144, 152, 180] as $s) {
             $Icon = Image::getImagine()
@@ -306,7 +306,7 @@ class Favicon extends \yii\base\Widget
     protected function generateManifestJson()
     {
         file_put_contents(
-            $this->getWebPath() . DIRECTORY_SEPARATOR . 'browserconfig.xml',
+            $this->getWebPath() . DIRECTORY_SEPARATOR . 'manifest.json',
             $this->getViewContent('manifest.json')
         );
     }
