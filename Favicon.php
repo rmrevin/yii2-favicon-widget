@@ -12,6 +12,7 @@ use Imagine\Image\Color;
 use Imagine\Image\Point;
 use yii\helpers\Html;
 use yii\imagine\Image;
+use yii\helpers\Url;
 
 /**
  * Class Favicon
@@ -63,7 +64,7 @@ class Favicon extends \yii\base\Widget
             $this->tags[] = Html::tag('link', null, [
                 'rel' => 'icon',
                 'type' => 'image/png',
-                'href' => sprintf('/%s', $filename),
+                'href' => Url::to(sprintf('@web/%s', $filename)),
                 'sizes' => sprintf('%sx%s', $s, $s),
             ]);
         }
@@ -71,13 +72,13 @@ class Favicon extends \yii\base\Widget
         $this->tags[] = Html::tag('link', null, [
             'rel' => 'icon',
             'type' => 'image/png',
-            'href' => '/android-chrome-192x192.png',
+            'href' => Url::to('@web/android-chrome-192x192.png'),
             'sizes' => sprintf('%sx%s', 192, 192),
         ]);
 
         $this->tags[] = Html::tag('link', null, [
             'rel' => 'manifest',
-            'href' => '/manifest.json',
+            'href' => Url::to('@web/manifest.json'),
         ]);
 
         foreach ([57, 60, 72, 76, 114, 120, 144, 152, 180] as $s) {
@@ -86,7 +87,7 @@ class Favicon extends \yii\base\Widget
             $this->tags[] = Html::tag('link', null, [
                 'rel' => 'apple-touch-icon',
                 'type' => 'image/png',
-                'href' => sprintf('/%s', $filename),
+                'href' => Url::to(sprintf('@web/%s', $filename)),
                 'sizes' => sprintf('%sx%s', $s, $s),
             ]);
         }
@@ -98,7 +99,7 @@ class Favicon extends \yii\base\Widget
 
         $this->tags[] = Html::tag('meta', null, [
             'name' => 'msapplication-TileImage',
-            'content' => '/mstile-144x144.png',
+            'content' => Url::to('@web/mstile-144x144.png'),
         ]);
 
         $this->tags[] = Html::tag('meta', null, [
