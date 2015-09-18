@@ -8,7 +8,7 @@ Yii 2 Favicon widget
 Installation
 ------------
 ```bash
-composer require "rmrevin/yii2-favicon-widget:1.0.*"
+composer require "rmrevin/yii2-favicon-widget:1.1.*"
 ```
 
 Usage
@@ -19,10 +19,12 @@ In layout view
 <head>
     // ...
     <?php
-    echo backend\widgets\Favicon::widget([
+    echo \rmrevin\yii\favicon\Favicon::widget([
+        'web' => '@web',
+        'webroot' => '@webroot',
         'favicon' => '@webroot/favicon.png',
-        'web' => '@webroot',
         'color' => '#2b5797',
+        'viewComponent' => 'view',
     ]);
     
     // output 
