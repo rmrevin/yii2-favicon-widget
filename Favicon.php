@@ -10,9 +10,8 @@ namespace rmrevin\yii\favicon;
 use Imagine\Image\Box;
 use Imagine\Image\Color;
 use Imagine\Image\Point;
-use yii\helpers\Html;
-use yii\imagine\Image;
 use yii\helpers\Url;
+use yii\imagine\Image;
 
 /**
  * Class Favicon
@@ -21,20 +20,20 @@ use yii\helpers\Url;
 class Favicon extends \yii\base\Widget
 {
 
-    /** @var bool */
-    public $generate = true;
-
-    /** @var bool */
-    public $forceGenerate = false;
-
     /** @var string ONLY PNG */
     public $favicon = '@webroot/favicon.png';
 
     /** @var string */
-    public $web = '@webroot';
+    public $webroot = '@webroot';
+
+    /** @var string */
+    public $web = '@web';
+
+    /** @var string|\yii\web\View */
+    public $viewComponent = 'view';
 
     /** @var string name for manifest.json */
-    public $appname = 'Cookyii CMF';
+    public $appname = 'Awesome Application';
 
     /** @var string color for ms windows tile background & android theme color */
     public $color = '#2b5797';
@@ -42,14 +41,44 @@ class Favicon extends \yii\base\Widget
     /** @var string|null|Color color for apple icons background fill (null - transparent) */
     public $fillColor;
 
-    /** @var array */
-    protected $tags = [];
+    /** @var bool */
+    public $generate = true;
 
+    /** @var bool */
+    public $forceGenerate = false;
+
+    /** @var bool */
+    public $generateMetaFavicon = true;
+
+    /** @var bool */
+    public $generateFavicon = true;
+
+    /** @var bool */
+    public $generateApple = true;
+
+    /** @var bool */
+    public $generateAndroid = true;
+
+    /** @var bool */
+    public $generateManifestJson = true;
+
+    /** @var bool */
+    public $generateMicrosoftTiles = true;
+
+    /** @var bool */
+    public $generateBrowserConfigXml = true;
+
+    /**
+     * @throws \yii\base\InvalidConfigException
+     */
     public function run()
     {
+        /** @var \yii\web\View $View */
+        $View = \Yii::$app->get($this->viewComponent);
+
         if ($this->generate === true) {
             if (!$this->checkIconsExists() || $this->forceGenerate) {
-                $this->generateFavicons();
+                $this->generateFavicon();
                 $this->generateApple();
                 $this->generateAndroid();
                 $this->generateManifestJson();
@@ -60,62 +89,79 @@ class Favicon extends \yii\base\Widget
 
         foreach ([16, 32, 96, 194] as $s) {
             $filename = sprintf('favicon-%sx%s.png', $s, $s);
+            $filepath = \Yii::getAlias($this->webroot . DIRECTORY_SEPARATOR . $filename);
 
-            $this->tags[] = Html::tag('link', null, [
-                'rel' => 'icon',
-                'type' => 'image/png',
-                'href' => Url::to(sprintf('@web/%s', $filename)),
-                'sizes' => sprintf('%sx%s', $s, $s),
-            ]);
+            if (!empty($filepath) && file_exists($filepath)) {
+                $View->registerLinkTag([
+                    'rel' => 'icon',
+                    'type' => 'image/png',
+                    'href' => Url::to(sprintf('%s/%s', $this->web, $filename)),
+                    'sizes' => sprintf('%sx%s', $s, $s),
+                ], basename($filepath));
+            }
         }
 
-        $this->tags[] = Html::tag('link', null, [
-            'rel' => 'icon',
-            'type' => 'image/png',
-            'href' => Url::to('@web/android-chrome-192x192.png'),
-            'sizes' => sprintf('%sx%s', 192, 192),
-        ]);
+        $filepath = \Yii::getAlias($this->webroot . DIRECTORY_SEPARATOR . 'android-chrome-192x192.png');
+        if (!empty($filepath) && file_exists($filepath)) {
+            $View->registerLinkTag([
+                'rel' => 'icon',
+                'type' => 'image/png',
+                'href' => Url::to(sprintf('%s/android-chrome-192x192.png', $this->web)),
+                'sizes' => sprintf('%sx%s', 192, 192),
+            ], basename($filepath));
+        }
 
-        $this->tags[] = Html::tag('link', null, [
-            'rel' => 'manifest',
-            'href' => Url::to('@web/manifest.json'),
-        ]);
+        $filepath = \Yii::getAlias($this->webroot . DIRECTORY_SEPARATOR . 'manifest.json');
+        if (!empty($filepath) && file_exists($filepath)) {
+            $View->registerLinkTag([
+                'rel' => 'manifest',
+                'href' => Url::to(sprintf('%s/manifest.json', $this->web)),
+            ], basename($filepath));
+        }
 
         foreach ([57, 60, 72, 76, 114, 120, 144, 152, 180] as $s) {
             $filename = sprintf('apple-touch-icon-%sx%s.png', $s, $s);
+            $filepath = \Yii::getAlias($this->webroot . DIRECTORY_SEPARATOR . $filename);
 
-            $this->tags[] = Html::tag('link', null, [
-                'rel' => 'apple-touch-icon',
-                'type' => 'image/png',
-                'href' => Url::to(sprintf('@web/%s', $filename)),
-                'sizes' => sprintf('%sx%s', $s, $s),
-            ]);
+            if (!empty($filepath) && file_exists($filepath)) {
+                $View->registerLinkTag([
+                    'rel' => 'apple-touch-icon',
+                    'type' => 'image/png',
+                    'href' => Url::to(sprintf('%s/%s', $this->web, $filename)),
+                    'sizes' => sprintf('%sx%s', $s, $s),
+                ], basename($filepath));
+            }
         }
 
-        $this->tags[] = Html::tag('meta', null, [
-            'name' => 'msapplication-TileColor',
-            'content' => $this->color,
-        ]);
+        $filepath = \Yii::getAlias($this->webroot . DIRECTORY_SEPARATOR . 'mstile-144x144.png');
+        if (!empty($filepath) && file_exists($filepath)) {
+            $View->registerMetaTag([
+                'name' => 'msapplication-TileImage',
+                'content' => Url::to(sprintf('%s/mstile-144x144.png', $this->web)),
+            ], basename($filepath));
+        }
 
-        $this->tags[] = Html::tag('meta', null, [
-            'name' => 'msapplication-TileImage',
-            'content' => Url::to('@web/mstile-144x144.png'),
-        ]);
+        if (!empty($this->color)) {
+            $View->registerMetaTag([
+                'name' => 'msapplication-TileColor',
+                'content' => $this->color,
+            ], 'msapplication-TileColor');
 
-        $this->tags[] = Html::tag('meta', null, [
-            'name' => 'theme-color',
-            'content' => $this->color,
-        ]);
-
-        foreach ($this->tags as $tag) {
-            echo $tag . PHP_EOL;
+            $View->registerMetaTag([
+                'name' => 'theme-color',
+                'content' => $this->color,
+            ], 'theme-color');
         }
     }
 
-    protected function generateFavicons()
+    protected function generateFavicon()
     {
+        if (false === $this->generateFavicon) {
+            return;
+        }
+
         $favicon_path = $this->getFaviconPath();
-        $web_path = $this->getWebPath();
+        $path = $this->getWebPath();
 
         foreach ([16, 32, 96, 194] as $s) {
             $filename = sprintf('favicon-%sx%s.png', $s, $s);
@@ -123,14 +169,18 @@ class Favicon extends \yii\base\Widget
             Image::getImagine()
                 ->open($favicon_path)
                 ->resize(new Box($s, $s))
-                ->save($web_path . DIRECTORY_SEPARATOR . $filename);
+                ->save($path . DIRECTORY_SEPARATOR . $filename);
         }
     }
 
     protected function generateAndroid()
     {
+        if (false === $this->generateAndroid) {
+            return;
+        }
+
         $favicon_path = $this->getFaviconPath();
-        $web_path = $this->getWebPath();
+        $path = $this->getWebPath();
 
         $variants = [
             [
@@ -184,7 +234,7 @@ class Favicon extends \yii\base\Widget
             /** @var array $mark */
             $mark = $conf['mark'];
 
-            $file = $web_path . DIRECTORY_SEPARATOR . sprintf('android-chrome-%sx%s.png', $mark[0], $mark[1]);
+            $file = $path . DIRECTORY_SEPARATOR . sprintf('android-chrome-%sx%s.png', $mark[0], $mark[1]);
 
             $Icon = Image::getImagine()
                 ->open($favicon_path)
@@ -199,8 +249,12 @@ class Favicon extends \yii\base\Widget
 
     protected function generateApple()
     {
+        if (false === $this->generateApple) {
+            return;
+        }
+
         $favicon_path = $this->getFaviconPath();
-        $web_path = $this->getWebPath();
+        $path = $this->getWebPath();
 
         /** @var integer $default size fo default icon */
         $default = 180;
@@ -221,26 +275,30 @@ class Favicon extends \yii\base\Widget
             Image::getImagine()
                 ->create(new Box($s, $s), $Color)
                 ->paste($Icon, $Point)
-                ->save($web_path . DIRECTORY_SEPARATOR . sprintf('apple-touch-icon-%sx%s.png', $s, $s));
+                ->save($path . DIRECTORY_SEPARATOR . sprintf('apple-touch-icon-%sx%s.png', $s, $s));
 
             if ($default === $s) {
                 Image::getImagine()
                     ->create(new Box($s, $s), $Color)
                     ->paste($Icon, $Point)
-                    ->save($web_path . DIRECTORY_SEPARATOR . 'apple-touch-icon.png');
+                    ->save($path . DIRECTORY_SEPARATOR . 'apple-touch-icon.png');
             }
         }
     }
 
     protected function generateMicrosoftTiles()
     {
+        if (false === $this->generateMicrosoftTiles) {
+            return;
+        }
+
         $favicon_path = $this->getFaviconPath();
-        $web_path = $this->getWebPath();
+        $path = $this->getWebPath();
 
         Image::getImagine()
             ->open($favicon_path)
             ->resize(new Box(144, 144))
-            ->save($web_path . DIRECTORY_SEPARATOR . sprintf('mstile-%sx%s.png', 144, 144));
+            ->save($path . DIRECTORY_SEPARATOR . sprintf('mstile-%sx%s.png', 144, 144));
 
         $variants = [
             [
@@ -282,7 +340,7 @@ class Favicon extends \yii\base\Widget
             /** @var array $mark */
             $mark = $conf['mark'];
 
-            $file = $web_path . DIRECTORY_SEPARATOR . sprintf('mstile-%sx%s.png', $mark[0], $mark[1]);
+            $file = $path . DIRECTORY_SEPARATOR . sprintf('mstile-%sx%s.png', $mark[0], $mark[1]);
 
             $Icon = Image::getImagine()
                 ->open($favicon_path)
@@ -297,6 +355,10 @@ class Favicon extends \yii\base\Widget
 
     protected function generateBrowserConfigXml()
     {
+        if (false === $this->generateBrowserConfigXml) {
+            return;
+        }
+
         file_put_contents(
             $this->getWebPath() . DIRECTORY_SEPARATOR . 'browserconfig.xml',
             $this->getViewContent('browserconfig.xml')
@@ -306,6 +368,10 @@ class Favicon extends \yii\base\Widget
 
     protected function generateManifestJson()
     {
+        if (false === $this->generateManifestJson) {
+            return;
+        }
+
         file_put_contents(
             $this->getWebPath() . DIRECTORY_SEPARATOR . 'manifest.json',
             $this->getViewContent('manifest.json')
@@ -354,10 +420,10 @@ class Favicon extends \yii\base\Widget
 
         $icons = ['android-chrome-36x36.png', 'apple-touch-icon-57x57.png', 'favicon-16x16.png', 'mstile-70x70.png'];
 
-        $web_path = $this->getWebPath();
+        $path = $this->getWebPath();
 
         foreach ($icons as $icon) {
-            $result = $result && file_exists($web_path . DIRECTORY_SEPARATOR . $icon);
+            $result = $result && file_exists($path . DIRECTORY_SEPARATOR . $icon);
         }
 
         return $result;
@@ -406,16 +472,16 @@ class Favicon extends \yii\base\Widget
      */
     protected function getWebPath()
     {
-        $web_path = \Yii::getAlias($this->web);
+        $path = \Yii::getAlias($this->webroot);
 
-        if (empty($web_path) || !file_exists($web_path) || !is_dir($web_path)) {
+        if (empty($path) || !file_exists($path) || !is_dir($path)) {
             throw new \yii\base\InvalidConfigException('Web path not exists.');
         }
 
-        if (!is_writable($web_path)) {
+        if (!is_writable($path)) {
             throw new \yii\base\InvalidConfigException('Web path is not writable.');
         }
 
-        return $web_path;
+        return $path;
     }
 }
