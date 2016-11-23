@@ -8,7 +8,9 @@
 namespace rmrevin\yii\favicon;
 
 use Imagine\Image\Box;
-use Imagine\Image\Color;
+use Imagine\Image\Palette\Color\RGB as Color;
+use Imagine\Image\Palette\ColorParser;
+use Imagine\Image\Palette\RGB;
 use Imagine\Image\Point;
 use yii\helpers\Url;
 use yii\imagine\Image;
@@ -89,7 +91,7 @@ class Favicon extends \yii\base\Widget
 
         foreach ([16, 32, 96, 194] as $s) {
             $filename = sprintf('favicon-%sx%s.png', $s, $s);
-            $filepath = \Yii::getAlias($this->webroot . DIRECTORY_SEPARATOR . $filename);
+            $filepath = \Yii::getAlias($this->webroot) . DIRECTORY_SEPARATOR . $filename;
 
             if (!empty($filepath) && file_exists($filepath)) {
                 $View->registerLinkTag([
@@ -101,7 +103,7 @@ class Favicon extends \yii\base\Widget
             }
         }
 
-        $filepath = \Yii::getAlias($this->webroot . DIRECTORY_SEPARATOR . 'android-chrome-192x192.png');
+        $filepath = \Yii::getAlias($this->webroot) . DIRECTORY_SEPARATOR . 'android-chrome-192x192.png';
         if (!empty($filepath) && file_exists($filepath)) {
             $View->registerLinkTag([
                 'rel' => 'icon',
@@ -111,7 +113,7 @@ class Favicon extends \yii\base\Widget
             ], basename($filepath));
         }
 
-        $filepath = \Yii::getAlias($this->webroot . DIRECTORY_SEPARATOR . 'manifest.json');
+        $filepath = \Yii::getAlias($this->webroot) . DIRECTORY_SEPARATOR . 'manifest.json';
         if (!empty($filepath) && file_exists($filepath)) {
             $View->registerLinkTag([
                 'rel' => 'manifest',
@@ -121,7 +123,7 @@ class Favicon extends \yii\base\Widget
 
         foreach ([57, 60, 72, 76, 114, 120, 144, 152, 180] as $s) {
             $filename = sprintf('apple-touch-icon-%sx%s.png', $s, $s);
-            $filepath = \Yii::getAlias($this->webroot . DIRECTORY_SEPARATOR . $filename);
+            $filepath = \Yii::getAlias($this->webroot) . DIRECTORY_SEPARATOR . $filename;
 
             if (!empty($filepath) && file_exists($filepath)) {
                 $View->registerLinkTag([
@@ -133,7 +135,7 @@ class Favicon extends \yii\base\Widget
             }
         }
 
-        $filepath = \Yii::getAlias($this->webroot . DIRECTORY_SEPARATOR . 'mstile-144x144.png');
+        $filepath = \Yii::getAlias($this->webroot) . DIRECTORY_SEPARATOR . 'mstile-144x144.png';
         if (!empty($filepath) && file_exists($filepath)) {
             $View->registerMetaTag([
                 'name' => 'msapplication-TileImage',
@@ -241,7 +243,7 @@ class Favicon extends \yii\base\Widget
                 ->resize($resize);
 
             Image::getImagine()
-                ->create($canvas, new Color('ffffff', 100))
+                ->create( $canvas, ( new Color( new RGB, (new ColorParser)->parseToRGB('ffffff'), 100 ) ) )/*->color('ffffff', 100))*/
                 ->paste($Icon, $point)
                 ->save($file);
         }
@@ -262,9 +264,9 @@ class Favicon extends \yii\base\Widget
         $Point = new Point(0, 0);
 
         $Color = empty($this->fillColor)
-            ? new Color('ffffff', 100)
+            ? (new Color(new RGB, (new ColorParser)->parseToRGB('ffffff'), 100))/*->color('ffffff', 100)*/
             : (is_string($this->fillColor)
-                ? new Color(str_replace('#', '', $this->fillColor))
+                ? (new Color(new RGB, (new ColorParser)->parseToRGB(str_replace('#', '', $this->fillColor), 100)))/*->color(str_replace('#', '', $this->fillColor))*/
                 : $this->color);
 
         foreach ([57, 60, 72, 76, 114, 120, 144, 152, 180] as $s) {
@@ -347,7 +349,7 @@ class Favicon extends \yii\base\Widget
                 ->resize($resize);
 
             Image::getImagine()
-                ->create($canvas, new Color('ffffff', 100))
+                ->create($canvas, new Color(new RGB, (new ColorParser)->parseToRGB('ffffff'), 100))
                 ->paste($Icon, $point)
                 ->save($file);
         }
