@@ -89,7 +89,7 @@ class Favicon extends \yii\base\Widget
             }
         }
 
-        $wr = \Yii::getAlias($this->webroot) . DIRECTORY_SEPARATOR;
+        $webroot = \Yii::getAlias($this->webroot) . DIRECTORY_SEPARATOR;
 
         foreach ([16, 32, 96, 194] as $s) {
             $filename = sprintf('favicon-%sx%s.png', $s, $s);
