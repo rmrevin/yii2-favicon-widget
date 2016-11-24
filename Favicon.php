@@ -243,7 +243,7 @@ class Favicon extends \yii\base\Widget
                 ->resize($resize);
 
             Image::getImagine()
-                ->create($canvas, (new RGB)->color('#fffff'))
+                ->create($canvas, (new RGB)->color('#ffffff'))
                 ->paste($Icon, $point)
                 ->save($file);
         }
