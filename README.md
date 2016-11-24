@@ -8,7 +8,7 @@ Yii 2 Favicon widget
 Installation
 ------------
 ```bash
-composer require "rmrevin/yii2-favicon-widget:1.1.*"
+composer require "rmrevin/yii2-favicon-widget:~1.2"
 ```
 
 Usage

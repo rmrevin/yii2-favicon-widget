@@ -1,3 +1,8 @@
+2016-11-24 - 1.2.0
+------------------
+* Update `yii-imagine` to version `2.1`.
+* Refactoring.
+
 2015-06-22 - 1.0.2
 ------------------
 * Bugfixes.
