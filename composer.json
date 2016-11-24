@@ -23,8 +23,8 @@
   "require": {
     "php": ">=5.4.0",
 
-    "yiisoft/yii2": "2.0.*",
-    "yiisoft/yii2-imagine": "2.1.*"
+    "yiisoft/yii2": "~2.0",
+    "yiisoft/yii2-imagine": "~2.1"
   },
   "autoload": {
     "psr-4": {

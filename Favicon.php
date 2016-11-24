@@ -8,8 +8,6 @@
 namespace rmrevin\yii\favicon;
 
 use Imagine\Image\Box;
-use Imagine\Image\Palette\Color\RGB as Color;
-use Imagine\Image\Palette\ColorParser;
 use Imagine\Image\Palette\RGB;
 use Imagine\Image\Point;
 use yii\helpers\Url;
@@ -40,7 +38,7 @@ class Favicon extends \yii\base\Widget
     /** @var string color for ms windows tile background & android theme color */
     public $color = '#2b5797';
 
-    /** @var string|null|Color color for apple icons background fill (null - transparent) */
+    /** @var string|null color for apple icons background fill (null - transparent) */
     public $fillColor;
 
     /** @var bool */
@@ -245,7 +243,7 @@ class Favicon extends \yii\base\Widget
                 ->resize($resize);
 
             Image::getImagine()
-                ->create( $canvas, ( new Color( new RGB, (new ColorParser)->parseToRGB('ffffff'), 0 ) ) )
+                ->create($canvas, (new RGB)->color('#fffff'))
                 ->paste($Icon, $point)
                 ->save($file);
         }
@@ -266,9 +264,9 @@ class Favicon extends \yii\base\Widget
         $Point = new Point(0, 0);
 
         $Color = empty($this->fillColor)
-            ? (new Color(new RGB, (new ColorParser)->parseToRGB('ffffff'), 0))
+            ? (new RGB)->color('#ffffff')
             : (is_string($this->fillColor)
-                ? (new Color(new RGB, (new ColorParser)->parseToRGB(str_replace('#', '', $this->fillColor))))
+                ? (new RGB)->color($this->fillColor)
                 : $this->color);
 
         foreach ([57, 60, 72, 76, 114, 120, 144, 152, 180] as $s) {
@@ -351,7 +349,7 @@ class Favicon extends \yii\base\Widget
                 ->resize($resize);
 
             Image::getImagine()
-                ->create($canvas, new Color(new RGB, (new ColorParser)->parseToRGB('ffffff'), 100))
+                ->create($canvas, (new RGB)->color('#ffffff'))
                 ->paste($Icon, $point)
                 ->save($file);
         }
